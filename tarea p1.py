@@ -1,17 +1,26 @@
 
-class vuelo:
-    class avion:
-        def __init__(self,modelo_de_avion,cantidad_asientos,codigo_identificador):
-            self.modelo_de_avion=modelo_de_avion
-            self.cantidad_asientos=cantidad_asientos
-            self.IDnumero=codigo_identificador
-
-    def __init__(self,origen,destino,fecha,hora,codigo_identificador):
-        self.origen=origen
-        self.destino=destino
-        self.fecha=fecha
-        self.hora=hora
-        self.avion= self.avion("boing 737 max 8","210", codigo_identificador)
-mi_vuelo=vuelo("argentina","chile","2023-08-24","23:00","FLT342")
-
-print(mi_vuelo.destino)
+class avion:
+    class vuelo:
+        class pasajero:
+            class reservas:
+                def __init__(self,pasajero,vuelo,estado):
+                    self.pasajero=pasajero
+                    self.vuelo=vuelo
+                    self.estado=estado
+            def __init__(self,nombre,numero_pasaporte,lista_vuelos_reservados,reservacion):
+                self.nombre=nombre
+                self.numero_p=numero_pasaporte
+                self.lista_v_r=lista_vuelos_reservados
+                self.reserva=self.pasajero(reservacion)
+        def __init__(self,origen,destino,fecha,hora,avion_asignado,lista_de_reservas,pasajero):
+            self.origen=origen
+            self.destino=destino
+            self.fecha=fecha
+            self.hora=hora
+            self.avion_a=avion_asignado
+            self.lista_de_reservas=lista_de_reservas
+            self.pasajero=self.reserva(pasajero)
+    def __init__(self,modelo,asientos,numero_vuelo):
+        self.modelo=modelo
+        self.asientos=asientos
+        self.numero_vuelo=self.avion_a(numero_vuelo)
