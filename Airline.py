@@ -24,6 +24,10 @@ class FlightNumber:
         self.assignedAircraft = assignedAircraft
         self.gate = gate
         self.reservationList = []
+
+    def ShowAllPasagers(self):
+        for reservation in self.reservationList:
+            print(reservation)
         
 class Passenger:
     def __init__(self,name,lastname,passportNumber):
@@ -54,8 +58,8 @@ class Reservation:
         for passenger in self.flight.reservationList:
             print(passenger)
 
-
-
+    
+    
 #COMENZAMOS
 
 
@@ -117,3 +121,5 @@ Sofia_Ramirez_Reservacion.MakeReservation()
 
 #Mostrando reservacion solo del avion3
 Sofia_Ramirez_Reservacion.ShowAllReservation()
+print("---------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+Temuco_Santiago.ShowAllPasagers()
