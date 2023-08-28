@@ -1,0 +1,223 @@
+#!/usr/bin/env python3
+
+import random
+from colorama import init, Fore
+init(autoreset=True)
+
+
+class Airplane:
+    def __init__(self, FLIGHTClass=None):
+        self.MODEL = self.GenerateAirplaneModel()
+        
+        self.SEATSMAP = [
+        ["A01","B01","C01","","D01","E01","I01"],
+        ["A02","B02","C02","","D02","E02","I02"],
+        ["A03","B03","C03","","D03","E03","I03"],
+        ["A04","B04","C04","","D04","E04","I04"],
+        ["A05","B05","C05","","D05","E05","I05"],
+        ["A06","B06","C06","","D06","E06","I06"],
+        ["A07","B07","C07","","D07","E07","I07"],
+        ["A08","B08","C08","","D08","E08","I08"],
+        ["A09","B09","C09","","D09","E09","I09"],
+        ["A10","B10","C10","","D10","E10","I10"],
+        ["A11","B11","C11","","D11","E11","I11"],
+        ["A12","B12","C12","","D12","E12","I12"],
+        ["A13","B13","C13","","D13","E13","I13"],
+        ["A14","B14","C14","","D14","E14","I14"],
+        ["A15","B15","C15","","D15","E15","I15"]
+        ]
+        
+        self.SEATSNUM = self.GetAirplaneSeatNum()
+        self.flight = self.UpdateFlight(FLIGHTClass)
+        
+    def GenerateAirplaneModel(self):
+        Models = [
+            "Boeing 737", "Airbus A320", "Boeing 777",
+            "Airbus A380", "Boeing 787 Dreamliner",
+            "Embraer E195","Bombardier CRJ700",
+            "Sukhoi Superjet 100"
+            ]
+        return random.choice(Models)
+    
+    def UpdateFlight(self, flightClass):
+        self.flight = flightClass
+            
+    def GetAirplaneSeatNum(self):
+        seatCounter = 0
+        for i in range(len(self.SEATSMAP)):
+            for j in range(len(self.SEATSMAP[i])):
+                if self.SEATSMAP[i][j] == "" or self.SEATSMAP[i][j] == " X ":
+                    continue
+                else:
+                    seatCounter += 1
+
+        self.SEATSNUM = seatCounter
+
+        return self.SEATSNUM
+    
+    def GetAirplaneMap(self):
+        for i in range(len(self.SEATSMAP)):
+            for j in range(len(self.SEATSMAP[i])):
+                if self.SEATSMAP[i][j] == "":
+                    print("  ",end="")
+                elif self.SEATSMAP[i][j] == " X ":
+                    print(f"{Fore.RED}[{self.SEATSMAP[i][j]}] ",end="")
+                else:
+                    print(f"[{self.SEATSMAP[i][j]}] ",end="" )
+            print("\n", end="")
+
+        
+    def ShowAllflights(self):
+        for flight in self.flightClass:
+            print(flight) 
+            
+    # def ModifyAirplane(self, SELECTED):
+    #     occupied = " X "
+    #     for i in range(len(self.SEATS)):
+    #         for j in range(len(self.SEATS[i])):
+    #             if self.SEATS[i][j] == SELECTED:
+    #                 self.SEATS[i][j] = occupied        
+        
+    # def AddFlight(self, flight):
+    #     self.destinations.append(
+    #     {
+    #         "Vuelo":flight.flight,
+    #         "Origen":flight.origin,
+    #         "Destino":flight.destination,
+    #         "Fecha":flight.date,
+    #         "Puerta":flight.gate,
+    #         "Avion":flight.assignedAircraft.model
+    #     }
+    # )
+
+class FlightNumber:
+    def __init__(self, ASIGNED, ORIGIN, DEST, DATE):
+        self.assigned = ASIGNED
+        self.origin = ORIGIN
+        self.destination = DEST
+        self.date = DATE
+        self.reservationList = []
+
+        self.ID = self.randID()
+
+
+    # Se genera una ID random, origen + destino + 4 numeros random
+    def randID(self):
+        temp = ""
+        for i in range(4):
+            temp += str(random.randint(0, 9))
+        return f"{self.origin[:2]}{self.destination[:2]}{temp}"
+
+class Passenger:
+
+    def __init__(self, NAME, LASTNAME, PASSPORT):
+        self.name = f"{NAME} {LASTNAME}"
+        self.passportNumber = PASSPORT
+        self.reservationsList = []
+
+        
+class Reservation:
+    def __init__(self, passengerClass, flightClass):
+        self.passenger = passengerClass
+        self.flight = flightClass
+        self.reservations = []
+
+    def CancelReservation(self):
+        self.flight.reservationList[0]["Estado"] = "Cancelado"
+        
+    def ShowAllReservation(self):
+        for passenger in self.INFO:
+            print("Fecha:       " + passenger.get("Fecha"))
+            print("Pasajero:    " + passenger.get("Pasajero"))
+            print("Asiento:     " + passenger.get("Asiento"))
+            print("Origen:      " + passenger.get("Origen"))
+            print("Destino:     " + passenger.get("Destino"))
+            print("Vuelo:       " + passenger.get("Vuelo"))
+            print("Estado:      " + passenger.get("Estado"))
+            print("---------------------------------------------")
+
+#COMENZAMOS
+def getINFO(self):
+    INFO = {
+        "Pasajero": f"{self.passenger.getName()} {self.passenger.getLastname()}",
+        "Vuelo":self.flight.flight,
+        "Origen":self.flight.origin,
+        "Destino":self.flight.destination,
+        "Fecha":self.flight.date,
+        "Asiento":self.seat,
+        "Estado":self.state
+            }
+    print(INFO)
+
+#Creacion de Aviones        
+Avion1 = Airplane()
+Avion2 = Airplane()
+Avion3 = Airplane()
+
+# Creando vuelos a Avion1
+Temuco_Santiago = FlightNumber(Avion1,"Temuco","Santiago","10:15 Sab.4 Nov.2023")
+
+# Creando vuelos a Avion2
+Santiago_Arica = FlightNumber(Avion2, "Santiago","Arica","12:15 Sab.5 Nov.2023")
+
+# Creando vuelos a Avion3
+BuenosAires_Caracas = FlightNumber(Avion3,"Buenos Aires","Caracas","11:30 Mie.9 Oct.2024")
+
+
+# Hacemos update de los aviones para actualizar los vuelos
+Avion1.UpdateFlight(Temuco_Santiago)
+Avion2.UpdateFlight(Santiago_Arica)
+Avion3.UpdateFlight(BuenosAires_Caracas)
+
+
+Avion1.ShowAllflights()
+
+# #Creando vuelos a Avion3
+# LaPaz_Cordoba = FlightNumber("Paz-4234","LaPaz","Cordoba","13:00 Mie.12 Nov.2023",Avion3,"D24")
+# Cordoba_Santiago = FlightNumber("Cor-9215","Cordoba","Santiago","14:00 Mar.27 Nov.2023",Avion3,"F12")
+
+
+# #Asignado vuelos a Avion1
+# Avion1.AddFlight(Temuco_Santiago)
+# Avion1.AddFlight(Santiago_Arica)
+
+# #Asigando vuelos a Avion2
+# Avion2.AddFlight(BuenosAires_Caracas)
+# Avion2.AddFlight(Lima_Santiago)
+
+# #Asignado vuelos a Avion3
+# Avion3.AddFlight(LaPaz_Cordoba)
+# Avion3.AddFlight(Cordoba_Santiago)
+
+# Avion1.AddFlight(Temuco_Santiago)
+# Avion1.AddFlight(Santiago_Arica)
+
+
+# #Pasajeros
+# Kevin_Parra = Passenger("Kevin","Parra","A1234567")
+# Brayan_Torres = Passenger("Brayan","Torres","C3213415")
+# Lucas_Mendez = Passenger("Lucas","Mendez","F5890321")
+# Sofia_Ramirez = Passenger("Sofia","Ramirez","B7128495")
+
+
+# #Reservando Pasajeros para el avion 1
+# Kevin_Parra_Reservacion = Reservation(Kevin_Parra,Temuco_Santiago,"B02","Activo")
+# Brayan_Torres_Reservacion = Reservation(Brayan_Torres,Temuco_Santiago,"B03","Activo")
+
+# Kevin_Parra_Reservacion.MakeReservation()
+# Brayan_Torres_Reservacion.MakeReservation()
+
+# #Reservando pasajetos para el avion3
+# Lucas_Mendez_Reservacion = Reservation(Lucas_Mendez,LaPaz_Cordoba,"A01","Activo")
+# Sofia_Ramirez_Reservacion = Reservation(Sofia_Ramirez,LaPaz_Cordoba,"B01","Activo")
+# Lucas_Mendez_Reservacion.MakeReservation()
+# Sofia_Ramirez_Reservacion.MakeReservation()
+
+# #Mostrando reservacion solo del avion1
+# Brayan_Torres_Reservacion.ShowAllReservation()
+
+# #Mostrando reservacion solo del avion2
+# Kevin_Parra_Reservacion.ShowAllReservation()
+
+# #Mostrando reservacion solo del avion3
+# Sofia_Ramirez_Reservacion.ShowAllReservation()
