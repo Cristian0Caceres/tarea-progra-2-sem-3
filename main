@@ -24,7 +24,7 @@ class Airplane:
         ["A12","B12","C12","","D12","E12","I12"],
         ["A13","B13","C13","","D13","E13","I13"],
         ["A14","B14","C14","","D14","E14","I14"],
-        ["A15","B15","C15","","D15","E15","I15"],
+        ["A15","B15","C15","","D15","E15","I15"]
         ]
         
         self.SEATSNUM = self.GetAirplaneSeatNum()
@@ -134,7 +134,7 @@ class Reservation:
             print("Destino:     " + passenger.get("Destino"))
             print("Vuelo:       " + passenger.get("Vuelo"))
             print("Estado:      " + passenger.get("Estado"))
-        print("---------------------------------------------")
+            print("---------------------------------------------")
 
 #COMENZAMOS
 def getINFO(self):
