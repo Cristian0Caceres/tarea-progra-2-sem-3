@@ -6,7 +6,7 @@ init(autoreset=True)
 
 
 class Airplane:
-    def __init__(self, FLIGHTClass=None):
+    def __init__(self):
         self.MODEL = self.GenerateAirplaneModel()
         
         self.SEATSMAP = [
@@ -28,7 +28,6 @@ class Airplane:
         ]
         
         self.SEATSNUM = self.GetAirplaneSeatNum()
-        self.flight = self.UpdateFlight(FLIGHTClass)
         
     def GenerateAirplaneModel(self):
         Models = [
@@ -38,10 +37,7 @@ class Airplane:
             "Sukhoi Superjet 100"
             ]
         return random.choice(Models)
-    
-    def UpdateFlight(self, flightClass):
-        self.flight = flightClass
-            
+
     def GetAirplaneSeatNum(self):
         seatCounter = 0
         for i in range(len(self.SEATSMAP)):
@@ -66,11 +62,7 @@ class Airplane:
                     print(f"[{self.SEATSMAP[i][j]}] ",end="" )
             print("\n", end="")
 
-        
-    def ShowAllflights(self):
-        for flight in self.flightClass:
-            print(flight) 
-            
+
     # def ModifyAirplane(self, SELECTED):
     #     occupied = " X "
     #     for i in range(len(self.SEATS)):
@@ -115,16 +107,6 @@ class Passenger:
         self.passportNumber = PASSPORT
         self.reservationsList = []
 
-        
-class Reservation:
-    def __init__(self, passengerClass, flightClass):
-        self.passenger = passengerClass
-        self.flight = flightClass
-        self.reservations = []
-
-    def CancelReservation(self):
-        self.flight.reservationList[0]["Estado"] = "Cancelado"
-        
     def ShowAllReservation(self):
         for passenger in self.INFO:
             print("Fecha:       " + passenger.get("Fecha"))
@@ -135,6 +117,15 @@ class Reservation:
             print("Vuelo:       " + passenger.get("Vuelo"))
             print("Estado:      " + passenger.get("Estado"))
             print("---------------------------------------------")
+
+class Reservation:
+    def __init__(self, passengerClass, flightClass):
+        self.passenger = passengerClass
+        self.flight = flightClass
+        self.state = "Reservado"
+
+    def CancelReservation(self):
+        self.state = "Cancelado"
 
 #COMENZAMOS
 def getINFO(self):
@@ -164,10 +155,7 @@ Santiago_Arica = FlightNumber(Avion2, "Santiago","Arica","12:15 Sab.5 Nov.2023")
 BuenosAires_Caracas = FlightNumber(Avion3,"Buenos Aires","Caracas","11:30 Mie.9 Oct.2024")
 
 
-# Hacemos update de los aviones para actualizar los vuelos
-Avion1.UpdateFlight(Temuco_Santiago)
-Avion2.UpdateFlight(Santiago_Arica)
-Avion3.UpdateFlight(BuenosAires_Caracas)
+Kevin_Parra = Passenger("Kevin","Parra", "21566360" )
 
 
 
