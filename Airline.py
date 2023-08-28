@@ -52,9 +52,14 @@ class Reservation:
     
     def ShowAllReservation(self):
         for passenger in self.flight.reservationList:
-            print(passenger)
-
-
+            print("Fecha:       " + passenger.get("Fecha"))
+            print("Pasajero:    " + passenger.get("Pasajero"))
+            print("Asiento:     " + passenger.get("Asiento"))
+            print("Origen:      " + passenger.get("Origen"))
+            print("Destino:     " + passenger.get("Destino"))
+            print("Vuelo:       " + passenger.get("Vuelo"))
+            print("Estado:      " + passenger.get("Estado"))
+        print("---------------------------------------------")
 
 #COMENZAMOS
 
@@ -106,14 +111,17 @@ Brayan_Torres_Reservacion = Reservation(Brayan_Torres,Temuco_Santiago,"1B","Acti
 Kevin_Parra_Reservacion.MakeReservation()
 Brayan_Torres_Reservacion.MakeReservation()
 
-#Mostrando reservacion solo del avion1
-Brayan_Torres_Reservacion.ShowAllReservation()
-
 #Reservando pasajetos para el avion3
 Lucas_Mendez_Reservacion = Reservation(Lucas_Mendez,LaPaz_Cordoba,"1A","Activo")
 Sofia_Ramirez_Reservacion = Reservation(Sofia_Ramirez,LaPaz_Cordoba,"2B","Activo")
 Lucas_Mendez_Reservacion.MakeReservation()
 Sofia_Ramirez_Reservacion.MakeReservation()
+
+#Mostrando reservacion solo del avion1
+Brayan_Torres_Reservacion.ShowAllReservation()
+
+#Mostrando reservacion solo del avion2
+Kevin_Parra_Reservacion.ShowAllReservation()
 
 #Mostrando reservacion solo del avion3
 Sofia_Ramirez_Reservacion.ShowAllReservation()
