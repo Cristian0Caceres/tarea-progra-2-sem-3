@@ -89,23 +89,25 @@ class Passenger:
         self.reservationsList.append(RES)
     
     def ShowAllReservation(self):
-        for passenger in self.reservationsList:
-                print("Fecha:       " + passenger.get("Fecha"))
-                print("Pasajero:    " + passenger.get("Pasajero"))
-                print("Asiento:     " + passenger.get("Asiento"))
-                print("Origen:      " + passenger.get("Origen"))
-                print("Destino:     " + passenger.get("Destino"))
-                print("Vuelo:       " + passenger.get("Vuelo"))
-                print("Estado:      " + passenger.get("Estado"))
-                print("---------------------------------------------")
-
-    def PassengerInfo(self):
-        print("Nombre:        " + self.name)
-        print("Pasaporte:     " + self.passportNumber)
+        print("---------------------------------------------")
+        print("                Reservaciones                ")
+        print("---------------------------------------------")
         for i in self.reservationsList:
-            print("Asiento:       " + i.number)
+            temp = i.flight
+            print("ID:              " + temp.name)
+            print("Origen:          " + temp.origin)
+            print("Destino:         " + temp.destination)
+            print("Fecha:           " + temp.date)
             print("---------------------------------------------")
 
+    def PassengerInfo(self):
+        print("---------------------------------------------")
+        print("           Informacion del Pasajero          ")
+        print("---------------------------------------------")
+        print("Nombre:          " + self.name)
+        print("Pasaporte:       " + self.passportNumber)
+        self.ShowAllReservation()
+        
 class Reservation:
     def __init__(self, seat, passengerClass, flightClass):
         self.number = f"{seat}"
@@ -120,28 +122,38 @@ class Reservation:
 
 
 
+def main():
+    #Creacion de Aviones        
+    Avion1 = Airplane()
+    Avion2 = Airplane()
+    Avion3 = Airplane()
 
-#Creacion de Aviones        
-Avion1 = Airplane()
-Avion2 = Airplane()
-Avion3 = Airplane()
-
-# Creando vuelos a Avion1
-Temuco_Santiago = Flight(Avion1,"Temuco","Santiago","10:15 Sab.4 Nov.2023")
-# Creando vuelos a Avion2
-Santiago_Arica = Flight(Avion2, "Santiago","Arica","12:15 Sab.5 Nov.2023")
-# Creando vuelos a Avion3
-BuenosAires_Caracas = Flight(Avion3,"Buenos Aires","Caracas","11:30 Mie.9 Oct.2024")
+    # Creando vuelos a Avion1
+    Temuco_Santiago = Flight(Avion1,"Temuco","Santiago","10:15 Sab.4 Nov.2023")
+    # Creando vuelos a Avion2
+    Santiago_Arica = Flight(Avion2, "Santiago","Arica","12:15 Sab.5 Nov.2023")
+    # Creando vuelos a Avion3
+    BuenosAires_Caracas = Flight(Avion3,"Buenos Aires","Caracas","11:30 Mie.9 Oct.2024")
 
 
-Kevin_Parra = Passenger("Kevin", "Parra", "21566360" )
+    Kevin_Parra = Passenger("Kevin", "Parra", "21566360" )
 
-reservacion = Reservation("B01", Kevin_Parra, Temuco_Santiago)
+    reservacion1 = Reservation("B01", Kevin_Parra, Temuco_Santiago)
+    reservacion2 = Reservation("A12", Kevin_Parra, Santiago_Arica)
+    reservacion3 = Reservation("D11", Kevin_Parra, BuenosAires_Caracas)
 
-Kevin_Parra.addReservation(reservacion)
+    Kevin_Parra.addReservation(reservacion1)
+    Kevin_Parra.addReservation(reservacion2)
+    Kevin_Parra.addReservation(reservacion3)
 
-print(Kevin_Parra.PassengerInfo())
+    Kevin_Parra.PassengerInfo()
 
+
+
+
+
+if __name__ == "__main__":
+    main()
 
 # #Creando vuelos a Avion3
 # LaPaz_Cordoba = FlightNumber("Paz-4234","LaPaz","Cordoba","13:00 Mie.12 Nov.2023",Avion3,"D24")
