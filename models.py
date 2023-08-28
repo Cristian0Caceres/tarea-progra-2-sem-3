@@ -1,4 +1,4 @@
-
+#Esta cosa es idea futura pero no la pesques
 Boing = [
     
     ["A","B","C"], ["D","E","I"],

@@ -40,6 +40,7 @@ class Reservation:
 
     def MakeReservation(self):
 
+        #Solamente los acepta si el asiento comienza con 1, 
         if self.seat[0][0] == "1":
             self.flight.reservationList.append({"Pasajero":self.passenger.name + " " + self.passenger.lastname,"Vuelo":self.flight.flight,"Origen":self.flight.origin,"Destino":self.flight.destination,"Fecha":self.flight.date,"Asiento":self.seat,"Estado":self.state})
                     
@@ -62,7 +63,7 @@ class Reservation:
 #Creacion de Aviones        
 Avion1 = Airplane("Airbus A320",140)
 Avion2 = Airplane("Boeing 737",230)
-Avion3 = Airplane("Boeing 787 Dreamliner",2)
+Avion3 = Airplane("Boeing 787 Dreamliner",2) #Para probar que si hay mas 2, debe decir que no hay mas capacidad o algo asi
 
 #creando vuelos a Avion1
 Temuco_Santiago = FlightNumber("TM-2313","Temuco","Santiago","10:15 Sab.4 Nov.2023",Avion1,"A24")
