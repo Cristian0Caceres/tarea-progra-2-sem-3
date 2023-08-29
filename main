@@ -32,7 +32,7 @@ class Airplane:
     def GenerateAirplaneModel(self):
         Models = [
             "Boeing 737", "Airbus A320", "Boeing 777",
-            "Airbus A380", "Boeing 787 Dreamliner",
+            "Airbus A380", "Dreamliner",
             "Embraer E195","Bombardier CRJ700",
             "Sukhoi Superjet 100"
             ]
@@ -52,6 +52,10 @@ class Airplane:
         return self.SEATSNUM
     
     def GetAirplaneMap(self):
+        print("")
+        print("-------------------------------------")
+        print("        Asientos Disponibles         ")
+        print("-------------------------------------")
         for i in range(len(self.SEATSMAP)):
             for j in range(len(self.SEATSMAP[i])):
                 if self.SEATSMAP[i][j] == "":
@@ -61,7 +65,12 @@ class Airplane:
                 else:
                     print(f"[{self.SEATSMAP[i][j]}] ",end="" )
             print("\n", end="")
-
+    def UpdateReserved(self, seat):
+        for i in range(len(self.SEATSMAP)):
+            for j in range(len(self.SEATSMAP[i])):
+                if self.SEATSMAP[i][j] == seat:
+                    self.SEATSMAP[i][j] = " X "
+                    
 class Flight:
     def __init__(self, ASIGNED, ORIGIN, DEST, DATE):
         self.assigned = ASIGNED
@@ -87,17 +96,31 @@ class Passenger:
     
     def addReservation(self, RES):
         self.reservationsList.append(RES)
-    
+        seat = RES.number
+        RES.flight.assigned.UpdateReserved(seat)
+
     def ShowAllReservation(self):
         print("---------------------------------------------")
         print("                Reservaciones                ")
         print("---------------------------------------------")
         for i in self.reservationsList:
+            # Informacion del vuelo 
             temp = i.flight
-            print("ID:              " + temp.name)
-            print("Origen:          " + temp.origin)
-            print("Destino:         " + temp.destination)
-            print("Fecha:           " + temp.date)
+            state = i.state
+            name = temp.name
+            origin = temp.origin
+            destination = temp.destination
+            date = temp.date
+            # Informacion del avion 
+            flight = temp.assigned
+            flight_name = flight.MODEL
+            print("ID:              " + name)
+            print("Avion:           " + flight_name)
+            print("Estado:          " + state)
+            print("Origen:          " + origin)
+            print("Destino:         " + destination)
+            print("Fecha:           " + date)
+            
             print("---------------------------------------------")
 
     def PassengerInfo(self):
@@ -107,20 +130,18 @@ class Passenger:
         print("Nombre:          " + self.name)
         print("Pasaporte:       " + self.passportNumber)
         self.ShowAllReservation()
+
         
 class Reservation:
     def __init__(self, seat, passengerClass, flightClass):
-        self.number = f"{seat}"
+        self.number = seat
         self.passenger = passengerClass
         self.flight = flightClass
         self.state = "Reservado"
 
     def CancelReservation(self):
         self.state = "Cancelado"
-    
-
-
-
+        
 
 def main():
     #Creacion de Aviones        
@@ -147,10 +168,10 @@ def main():
     Kevin_Parra.addReservation(reservacion3)
 
     Kevin_Parra.PassengerInfo()
-
-
-
-
+    # Avion1
+    Avion1.GetAirplaneMap()
+    Avion2.GetAirplaneMap()
+    Avion3.GetAirplaneMap()
 
 if __name__ == "__main__":
     main()
