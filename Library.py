@@ -12,10 +12,13 @@ class Catalog:
     def __init__(self):
         self.catalog = []
 
-    def ShowCatalog():
-        for i in self.genders:
-            print(i)
+    def AddBook(self,book):
+        self.catalog.append(book)
 
+
+    def ShowCatalog(self):
+        for book in self.catalog:
+            print("Titulo: {0} Autor: {1} Genero {2}".format(book.name,book.author,book.gender))
 
 class User:                                             #Clase Usuario
     def __init__(self,id,user,lastname,age):
@@ -35,4 +38,17 @@ class load:                                          #Clase prestamo
 
 #creo libro
 
+
+catalogo = Catalog()
 narnia = Book("narnia", "Kevin parra",190,"narrative")
+harry = Book("harry el sucio poter","kevin parra",1000,"horror")
+locuras_pyeter_pkaer = Book("diabetin","satan",123,"horror")
+
+catalogo.AddBook(narnia)
+catalogo.AddBook(harry)
+catalogo.AddBook(locuras_pyeter_pkaer)
+
+
+catalogo.ShowCatalog()
+
+
