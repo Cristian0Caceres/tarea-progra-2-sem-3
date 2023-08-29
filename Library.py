@@ -15,16 +15,23 @@ class Catalog:
     def AddBook(self,book):
         self.catalog.append(book)
 
+    def DeleteBook(self,name):
+        index = 0
+        for book in self.catalog:
+            if book.name == name:
+                print(book.name,name)
+                self.catalog.pop(index)
+                break
 
     def ShowCatalog(self):
         for book in self.catalog:
             print("Titulo: {0} Autor: {1} Genero {2}".format(book.name,book.author,book.gender))
 
 class User:                                             #Clase Usuario
-    def __init__(self,id,user,lastname,age):
+    def __init__(self,id,name,lastname,age):
 
         self.id = id
-        self.user = user
+        self.name = name
         self.lastname = lastname
         self.age = age
 
@@ -34,8 +41,8 @@ class load:                                          #Clase prestamo
         self.user = user
         self.dateInit = dateInit
         self.dateExit = dateExit
-        
 
+    
 #creo libro
 
 
@@ -51,4 +58,12 @@ catalogo.AddBook(locuras_pyeter_pkaer)
 
 catalogo.ShowCatalog()
 
+catalogo.DeleteBook("narnia")
+
+catalogo.ShowCatalog()
+
+
+#Creando usuario
+
+Kevin = ("21.566.366-4","Kevin","Parra",19)
 
