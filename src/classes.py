@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
 import random
-from colorama import init, Fore
-init(autoreset=True)
 
+from colorama import Fore, init
+
+init(autoreset=True)
 
 class Airplane:
     def __init__(self):
@@ -50,7 +51,7 @@ class Airplane:
         self.SEATSNUM = seatCounter
 
         return self.SEATSNUM
-    
+
     def GetAirplaneMap(self):
         print("")
         print("-------------------------------------")
@@ -141,87 +142,5 @@ class Reservation:
 
     def CancelReservation(self):
         self.state = "Cancelado"
-        
-
 def main():
-    #Creacion de Aviones        
-    Avion1 = Airplane()
-    Avion2 = Airplane()
-    Avion3 = Airplane()
-
-    # Creando vuelos a Avion1
-    Temuco_Santiago = Flight(Avion1,"Temuco","Santiago","10:15 Sab.4 Nov.2023")
-    # Creando vuelos a Avion2
-    Santiago_Arica = Flight(Avion2, "Santiago","Arica","12:15 Sab.5 Nov.2023")
-    # Creando vuelos a Avion3
-    BuenosAires_Caracas = Flight(Avion3,"Buenos Aires","Caracas","11:30 Mie.9 Oct.2024")
-
-
-    Kevin_Parra = Passenger("Kevin", "Parra", "21566360" )
-
-    reservacion1 = Reservation("B01", Kevin_Parra, Temuco_Santiago)
-    reservacion2 = Reservation("A12", Kevin_Parra, Santiago_Arica)
-    reservacion3 = Reservation("D11", Kevin_Parra, BuenosAires_Caracas)
-
-    Kevin_Parra.addReservation(reservacion1)
-    Kevin_Parra.addReservation(reservacion2)
-    Kevin_Parra.addReservation(reservacion3)
-
-    Kevin_Parra.PassengerInfo()
-    # Avion1
-    Avion1.GetAirplaneMap()
-    Avion2.GetAirplaneMap()
-    Avion3.GetAirplaneMap()
-
-if __name__ == "__main__":
-    main()
-
-# #Creando vuelos a Avion3
-# LaPaz_Cordoba = FlightNumber("Paz-4234","LaPaz","Cordoba","13:00 Mie.12 Nov.2023",Avion3,"D24")
-# Cordoba_Santiago = FlightNumber("Cor-9215","Cordoba","Santiago","14:00 Mar.27 Nov.2023",Avion3,"F12")
-
-
-# #Asignado vuelos a Avion1
-# Avion1.AddFlight(Temuco_Santiago)
-# Avion1.AddFlight(Santiago_Arica)
-
-# #Asigando vuelos a Avion2
-# Avion2.AddFlight(BuenosAires_Caracas)
-# Avion2.AddFlight(Lima_Santiago)
-
-# #Asignado vuelos a Avion3
-# Avion3.AddFlight(LaPaz_Cordoba)
-# Avion3.AddFlight(Cordoba_Santiago)
-
-# Avion1.AddFlight(Temuco_Santiago)
-# Avion1.AddFlight(Santiago_Arica)
-
-
-# #Pasajeros
-# Kevin_Parra = Passenger("Kevin","Parra","A1234567")
-# Brayan_Torres = Passenger("Brayan","Torres","C3213415")
-# Lucas_Mendez = Passenger("Lucas","Mendez","F5890321")
-# Sofia_Ramirez = Passenger("Sofia","Ramirez","B7128495")
-
-
-# #Reservando Pasajeros para el avion 1
-# Kevin_Parra_Reservacion = Reservation(Kevin_Parra,Temuco_Santiago,"B02","Activo")
-# Brayan_Torres_Reservacion = Reservation(Brayan_Torres,Temuco_Santiago,"B03","Activo")
-
-# Kevin_Parra_Reservacion.MakeReservation()
-# Brayan_Torres_Reservacion.MakeReservation()
-
-# #Reservando pasajetos para el avion3
-# Lucas_Mendez_Reservacion = Reservation(Lucas_Mendez,LaPaz_Cordoba,"A01","Activo")
-# Sofia_Ramirez_Reservacion = Reservation(Sofia_Ramirez,LaPaz_Cordoba,"B01","Activo")
-# Lucas_Mendez_Reservacion.MakeReservation()
-# Sofia_Ramirez_Reservacion.MakeReservation()
-
-# #Mostrando reservacion solo del avion1
-# Brayan_Torres_Reservacion.ShowAllReservation()
-
-# #Mostrando reservacion solo del avion2
-# Kevin_Parra_Reservacion.ShowAllReservation()
-
-# #Mostrando reservacion solo del avion3
-# Sofia_Ramirez_Reservacion.ShowAllReservation()
+    print("Hola ")
