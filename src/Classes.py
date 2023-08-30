@@ -73,8 +73,6 @@ class Airplane:
         print("-------------------------------------")
         print("        Asientos Disponibles         ")
         print("-------------------------------------")
-        
-        
         for i in range(len(self.SEATSMAP)): #Leemos el mapa de asientos para saber que tan largo es
             for j in range(len(self.SEATSMAP[i])): # Iteramos sobre cada array dentro del array del mapa
             
@@ -148,7 +146,7 @@ class Reservation:
         self.passenger = passengerClass
         self.flight = flightClass
         self.state = "Reservado"
-        self.seat_POS = flightClass.CalculateSeat(seat)        
+        self.seat_POS = flightClass.assigned.CalculateSeat(seat)        
 
 class Passenger:
     def __init__(self, NAME, LASTNAME, PASSPORT):
@@ -157,11 +155,13 @@ class Passenger:
         self.reservationsList = []
 
     def addReservation(self, RESERVATION):
-        RESERVATION.flight.UpdateReserved(RESERVATION.seat)
+        RESERVATION.flight.assigned.UpdateReserved(RESERVATION.seat)
+        RESERVATION.flight.reservationList.append(RESERVATION)
         self.reservationsList.append(RESERVATION)# Añadimos la reservacion a la lista
 
     def delReservation(self, RESERVATION):
-        RESERVATION.flight.UpdateReserved(RESERVATION.seat, RESERVATION.seat_POS)
+        RESERVATION.flight.assigned.UpdateCanceled(RESERVATION.seat, RESERVATION.seat_POS)
+        RESERVATION.flight.reservationList.remove(RESERVATION)
         self.reservationsList.remove(RESERVATION)# Añadimos la reservacion a la lista
 
     def PassengerInfo(self):
@@ -180,6 +180,7 @@ class Passenger:
         for i in self.reservationsList:
             # Informacion del vuelo 
             state = i.state
+            seat = i.seat
             flight = i.flight
             name = flight.name
             origin = flight.origin
@@ -189,6 +190,7 @@ class Passenger:
             flight = flight.assigned
             flight_name = flight.MODEL
             print("ID:              " + name)
+            print("Asiento:         " + seat)
             print("Avion:           " + flight_name)
             print("Estado:          " + state)
             print("Origen:          " + origin)
@@ -196,12 +198,6 @@ class Passenger:
             print("Fecha:           " + date)
             
             print("---------------------------------------------")
-
-
-
-
-
-
 
 #*  _______________________
 #* < Funciones Principales >
@@ -344,14 +340,13 @@ def CrearPasajero(RUT):
         print(Fore.LIGHTRED_EX + "Ingresa tu Apellido Paterno")
         Lastname = input(">")
         Lastname = Lastname.replace(" ", "")
+
     Temp = GenerateID(name, Lastname)
     
     globals()[Temp] = Passenger(name, Lastname, RUT)
     
     ListaPasajeros.append(globals()[Temp])
-    
     SelVuelos(globals()[Temp])
-
 
 
 def ReservarVuelo():
@@ -372,11 +367,30 @@ def ReservarVuelo():
     if not pasajero_encontrado:
         CrearPasajero(RUT)
 
-    
-        
 def CancelarReservacion():
-    print("vuelo cancelado xd")
-    
+    print("")
+    print("Ingresa tu Rut/Pasaporte (Sin puntos, sin guión, ni el dígito verificador): ")
+
+    RUT = input(">")
+    RUT = RUT.replace(" ", "")
+
+    pasajero_encontrado = False
+
+    for pasajero in ListaPasajeros:
+        if pasajero.passportNumber == RUT:
+            pasajero.PassengerInfo()
+            print("")
+            print("Seleccione un asiento (ID):  ")
+            choice = input("> ")
+            
+            for reservation in pasajero.reservationsList:
+                if reservation.flight.name == choice:
+                    pasajero.delReservation(reservation)
+            pasajero_encontrado = True
+            break
+    if not pasajero_encontrado:
+        print("No existes en la base de datos")
+
 
 def CrearVuelosAleatorios():
     maxVuelos = 10
@@ -454,11 +468,11 @@ def SelVuelos(PASSENGER):
                     seat_choice = input("> ")
 
                     if flight.assigned.CheckSeat(seat_choice):
-                        Reservation = GenerateID()
+                        reserv = GenerateID(flight.origin, flight.destination)
                         
-                        reservation = Reservation(seat_choice, PASSENGER, flight)
-                        
-                        PASSENGER.addReservation(reservation)
+                        globals()[reserv] = Reservation(seat_choice, PASSENGER, flight)
+
+                        PASSENGER.addReservation(globals()[reserv])
                         
                         flight_found = True
                         break
@@ -476,7 +490,7 @@ def SelVuelos(PASSENGER):
 
 def VerReservaciones():
     for i in range(len(ListaPasajeros)):
-        ListaPasajeros[i].PassengerInfo
+        ListaPasajeros[i].PassengerInfo()
 
 def VerPasajeros():
     VerVuelos()
@@ -486,7 +500,7 @@ def VerPasajeros():
         temp = ListaVuelos[j]
         if temp.name == choice:
             ListaVuelos[j].showPassengers()
-            ListaVuelos[j].assigned.GetAirplaneMap
+            ListaVuelos[j].assigned.GetAirplaneMap()
 
 def main():
     # Generamos una serie de aviones
@@ -520,6 +534,8 @@ def main():
                 VerVuelos()
             elif choice == 7:
                 Bucle = False
+            elif choice == 10:
+                print(ListaVuelos)
         except Exception as r:
             print("Por favor ingrese una opcion valida :)")
             print(r)
