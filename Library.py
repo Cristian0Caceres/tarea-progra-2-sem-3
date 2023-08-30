@@ -65,41 +65,35 @@ class load:                                          #Clase prestamo
         for i in self.borrowedBooks:
             print(i)
 
-#creo libro
+def Welcome():
+    print("Bienvenido")
 
+def Options():
+    print("1. Registrar Usuario")
+    print("2. Crear Libro")
+    print("3. Eliminar Libro")
+    print("4. Prestar Libro")
+    print("5. Devolver Libro")
+    print("6. Ver libros disponibles")
+    print("7. Ver historial de un usuario")
+    print("0. Salir")
+    
+def main():
+    Welcome()
+    while userOptions != 0:
+        Options()
+        userOptions = int(input("> "))
+        if userOptions == 1:
+            userId = input("Id: ")
+            userName = input("Nombre: ")
+            userLastname = input("Apellido: ")
+            userAge = int(input("Edad"))
+            user = User(userId,userName,userLastname,userAge)
+            user.
+            
 
-catalogo = Catalog()
-narnia = Book("narnia", "Kevin parra",190,"narrative")
-harry = Book("harry el sucio poter","kevin parra",1000,"horror")
-diabetin = Book("diabetin","satan",123,"horror")
-
-catalogo.AddBook(narnia)
-catalogo.AddBook(harry)
-catalogo.AddBook(diabetin)
-
-#catalogo.ShowCatalog()
-
-catalogo.DeleteBook("narnia")
-
-
-#Creando usuario
-
-Kevin = ("21.566.366-4","Kevin","Parra",19)
-
-#Creando Load
-
-Kevin_load = load("diabetin",Kevin,"mayo 18 2023","mayo 23 2023")
-Kevin_load.LendBook(catalogo,Kevin)
-
-Kevin_load.ShowLendBook()
-
-
-
-Kevin.ShowBorrowedBooks()
-
-
-
-
+if __name__ == '__main__':
+    main()
 
 
 
