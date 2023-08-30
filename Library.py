@@ -84,6 +84,8 @@ class Load:                                          #Clase prestamo
                     ide = len(self.borrowedBooks)
                     book[5] = "No Disponible"
                     print(catalog)
+                    print(self.user)
+                    #self.user.userborrowedBooks.append(["Id: " + str(ide),"Nombre: " + book[1], "Autor: " + book[2],"Persona: " + self.user])
                     self.borrowedBooks.append(["Id: " + str(ide),"Nombre: " + book[1], "Autor: " + book[2],"Persona: " + self.user])
                 
     def ReturnBook(self,catalog,bookId):
@@ -215,8 +217,8 @@ def main():
             UserId = int(input("ID: "))
             userMemorySpace = GetUserMemory(UserId)
             print(userMemorySpace)
-            aux = userMemorySpace
-            globals()[aux].userborrowedBooks
+
+            print(userMemorySpace.userborrowedBooks)
 
 
         elif userOptions== 8:
