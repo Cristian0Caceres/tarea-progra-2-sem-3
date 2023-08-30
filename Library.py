@@ -42,7 +42,9 @@ class load:                                          #Clase prestamo
         self.dateInit = dateInit
         self.dateExit = dateExit
 
-    
+    def LendBook(self,catalog):
+        for i in catalog:
+            print(i)
 #creo libro
 
 
@@ -55,15 +57,17 @@ catalogo.AddBook(narnia)
 catalogo.AddBook(harry)
 catalogo.AddBook(locuras_pyeter_pkaer)
 
-
 catalogo.ShowCatalog()
 
 catalogo.DeleteBook("narnia")
-
-catalogo.ShowCatalog()
 
 
 #Creando usuario
 
 Kevin = ("21.566.366-4","Kevin","Parra",19)
 
+
+#Creando Load
+
+Kevin_load = load(narnia,Kevin,"mayo 18 2023","mayo 23 2023")
+Kevin_load.LendBook(catalogo)
