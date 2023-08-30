@@ -97,7 +97,6 @@ class Load:                                          #Clase prestamo
         for i in self.borrowedBooks:
             print(i)
 
-
 LIST_USERS = [
 
 ]
@@ -147,8 +146,8 @@ def Usserbooks():
     else:
         print("seleccione un usuario")
         option_u=input("escriba el nombre de usuario para continuar: ")
-        for user in  LIST_USERS:
-            if option_u == user:
+        for user in LIST_USERS:
+            if option_u == str(user):
                 print(f"el usuario tiene en su poder {LIST_USERS[user].userborrowedBooks}")
 
 def main():
