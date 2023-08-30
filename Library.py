@@ -37,11 +37,12 @@ class User:                                             #Clase Usuario
         self.name = name
         self.lastname = lastname
         self.age = age
-        self.userBorrowebBooks = []
+        self.userborrowedBooks= []
     
     def ShowBorrowedBooks(self):
-        for i in self.userBorrowebBooks:
-            print(i)
+        for books in self.userborrowedBooks:
+            print(books)
+
 
 class load:                                          #Clase prestamo
     def __init__(self,book,user,dateInit,dateExit):
@@ -51,15 +52,14 @@ class load:                                          #Clase prestamo
         self.dateExit = dateExit
         self.borrowedBooks = []
 
-    def LendBook(self,catalog):
+    def LendBook(self,catalog,user):
         
         for book in catalog.catalogList:
             if book.name == self.book and book.state == "Disponible":
                 register = "Libro: {0}, Persona: {1} {2}, Fecha de inicio: {3}, Fecha de termino: {4}".format(self.book,self.user[1],self.user[2],self.dateInit,self.dateExit)
                 self.borrowedBooks.append(register)
-                print(self.user)
-                self.user.userBorrowebBooks.append(register)
 
+                
 
     def ShowLendBook(self):
         for i in self.borrowedBooks:
@@ -89,9 +89,17 @@ Kevin = ("21.566.366-4","Kevin","Parra",19)
 #Creando Load
 
 Kevin_load = load("diabetin",Kevin,"mayo 18 2023","mayo 23 2023")
-Kevin_load.LendBook(catalogo)
+Kevin_load.LendBook(catalogo,Kevin)
 
 Kevin_load.ShowLendBook()
 
 
+
 Kevin.ShowBorrowedBooks()
+
+
+
+
+
+
+
