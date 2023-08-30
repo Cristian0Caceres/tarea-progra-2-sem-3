@@ -84,7 +84,6 @@ class Load:                                          #Clase prestamo
                     ide = len(self.borrowedBooks)
                     book[5] = "No Disponible"
                     print(catalog)
-                    print("FUNCIONAAAAAAAAAAAAAAAAAAAA")
                     print(self.borrowedBooks)
                     self.borrowedBooks.append(["Id: " + str(ide),"Nombre: " + book[1], "Autor: " + book[2],"Persona: " + self.user])
                 
