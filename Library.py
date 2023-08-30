@@ -15,28 +15,33 @@ class Book:                                                #Clase Libro
 class Catalog:        
     def __init__(self):
         self.catalogList = [
-
+    [0, "La casa de los espíritus", "Isabel Allende", 368, "Narrativo de terror", "Chile", "Disponible"],
+    [1, "Los detectives salvajes", "Roberto Bolaño", 648, "Narrativo de terror", "Chile", "No Disponible"],
+    [2, "2666", "Roberto Bolaño", 912, "Narrativo de terror", "Chile", "Disponible"],
+    [3, "La ciudad de los prodigios", "Eduardo Mendoza", 408, "Narrativo de terror", "Chile", "Disponible"],
+    [4, "La muerte de Artemio Cruz", "Carlos Fuentes", 291, "Narrativo de terror", "Chile", "Disponible"]
             ]
 
     def AddBook(self,book):
         self.catalogList.append(book)
 
-    def DeleteBook(self,name):
+    def DeleteBook(self,id):
         index = 0
         for book in self.catalogList:
-            print("entro")
-            print(self.catalogList)
-            print(index)
-            if book[1] == name:
-                self.catalogList.pop([0][index])
-                break
-            
+            if book[0] == int(id):
+                self.catalogList.pop(index)
+                break   
             index += 1
 
     def ShowCatalog(self):
         for book in self.catalogList:
-            print("Id " + str(book[0]) + " Titulo: "+ book[1] + " Autor: " + book[2] + " Paginas: " + book[3] + " Genero: " + book[4] + " Estado " +book[5])
+            print("Id " + str(book[0]) + " Titulo: "+ book[1] + " Autor: " + book[2] + " Paginas: " + str(book[3]) + " Genero: " + book[4] + " Estado " +book[5])
 
+    def ShowAvailableCatalog(self):
+        for book in self.catalogList:
+
+            if book[6] == "Disponible":
+                print("Id " + str(book[0]) + " Titulo: "+ book[1] + " Autor: " + book[2] + " Paginas: " + str(book[3]) + " Genero: " + book[4] + " Estado " +book[5])
 
 
 class User:                                             #Clase Usuario
@@ -57,7 +62,7 @@ class User:                                             #Clase Usuario
         print("Edad: ", self.age)
         print("Libros Prestados ", self.userborrowedBooks)
         
-class load:                                          #Clase prestamo
+class Load:                                          #Clase prestamo
     def __init__(self,book,user,dateInit,dateExit):
         self.book = book
         self.user = user
@@ -66,7 +71,8 @@ class load:                                          #Clase prestamo
         self.borrowedBooks = []
         
 
-    def LendBook(self,catalog,user):
+    def LendBook(self,catalog):
+        print(self)
         
         for book in catalog.catalogList:
             if book.name == self.book and book.state == "Disponible":
@@ -80,7 +86,9 @@ class load:                                          #Clase prestamo
             print(i)
 
 
-LIST_USERS = []
+LIST_USERS = [
+
+]
 CATALOG = Catalog()
 
 def Clean():
@@ -88,8 +96,14 @@ def Clean():
 
 def ShowUser():
     Clean()
-    for i in LIST_USERS:
-        print(i.id,i.name,i.lastname)
+    for user in LIST_USERS:
+        print(user.id,user.name,user.lastname,user.age)
+
+def GetUserMemory(userId):
+    for user in LIST_USERS:
+        if user.id == userId:
+            return user
+
 
 def GetIdBooks():
     return len(CATALOG.catalogList)
@@ -127,7 +141,8 @@ def main():
             userAge = int(input("Edad: "))
             globals()[aux] = User(userId,userName,userLastname,userAge)
             LIST_USERS.append(globals()[aux])
-            
+            print(LIST_USERS)
+            ShowUser()
         elif userOptions == 2:
             bookId = GetIdBooks()
             bookName = input("Nombre del libro: ")
@@ -139,19 +154,27 @@ def main():
             CATALOG.catalogList.append([bookId,globals()[aux].name,globals()[aux].author,globals()[aux].pages,globals()[aux].gender,"Disponible"])
             
         elif userOptions == 3:
-            bookName = input("Nombre del libro: ")
-            CATALOG.DeleteBook(bookName)
+            CATALOG.ShowCatalog()
+            bookId = input("Id del libro: ")
+            CATALOG.DeleteBook(bookId)
             
         elif userOptions == 4:
             ShowUser()
-            UserName = input("ID: ")
-            Catalog.ShowCatalog()
-            userBookName = input("Book Name: ")
+            UserId = int(input("ID: "))
+            CATALOG.ShowCatalog()
+            userMemorySpace = GetUserMemory(UserId)
+            print("memoria de usuraio: ", userMemorySpace)
+            userId = input("Book Id: ")
+            dateInit = input("Fecha de inicio ejemplo(18 oct 2023): ")
+            dateExit = input("Fecha de regreso ejemplo(25 oct 2023)")
+            aux = userMemorySpace
+            globals()[aux] = Load(userId,userMemorySpace.name,dateInit,dateExit)
             
+            globals()[aux].LendBook(CATALOG)
             
             
         elif userOptions == 6:
-            CATALOG.ShowCatalog()
+            CATALOG.ShowAvailableCatalog()
             
         elif userOptions== 8:
             ShowUser()
