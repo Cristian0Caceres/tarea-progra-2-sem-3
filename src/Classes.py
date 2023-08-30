@@ -22,7 +22,6 @@ init(autoreset=True)
 
 class Airplane:
     def __init__(self):
-        self.MODEL = self.GenerateAirplaneModel()
         self.SEATSMAP = [
         ["A01","B01","C01","","D01","E01","I01"],
         ["A02","B02","C02","","D02","E02","I02"],
@@ -41,7 +40,9 @@ class Airplane:
         ["A15","B15","C15","","D15","E15","I15"]
         ]
         
-        self.SEATSNUM = self.GetAirplaneSeatNum()
+        
+        self.MODEL = self.GenerateAirplaneModel() # Retorna un modelo aleatorio
+        self.SEATSNUM = self.GetAirplaneSeatNum() # Retorna los asientos disponibles
         
     def GenerateAirplaneModel(self):
         Models = [
@@ -52,11 +53,13 @@ class Airplane:
             ]
         return random.choice(Models)
 
+
     def GetAirplaneSeatNum(self):
         seatCounter = 0
-        for i in range(len(self.SEATSMAP)):
-            for j in range(len(self.SEATSMAP[i])):
-                if self.SEATSMAP[i][j] == "" or self.SEATSMAP[i][j] == " X ":
+        
+        for i in range(len(self.SEATSMAP)): # 15 arrays = 15 filas de asiento
+            for j in range(len(self.SEATSMAP[i])):  # Dentro de cada array hay 6 asientos + 1 el pasillo
+                if self.SEATSMAP[i][j] == "" or self.SEATSMAP[i][j] == " X ":   # Si es el pasillo o si está ocupado
                     continue
                 else:
                     seatCounter += 1
@@ -70,21 +73,58 @@ class Airplane:
         print("-------------------------------------")
         print("        Asientos Disponibles         ")
         print("-------------------------------------")
-        for i in range(len(self.SEATSMAP)):
-            for j in range(len(self.SEATSMAP[i])):
-                if self.SEATSMAP[i][j] == "":
-                    print("  ",end="")
-                elif self.SEATSMAP[i][j] == " X ":
+        
+        
+        for i in range(len(self.SEATSMAP)): #Leemos el mapa de asientos para saber que tan largo es
+            for j in range(len(self.SEATSMAP[i])): # Iteramos sobre cada array dentro del array del mapa
+            
+                if self.SEATSMAP[i][j] == "":       # Si el array está vacio entonces no printea nada, esto quiere decir que es el pasillo
+                    print("  ",end="")              # Printeamos nada    
+                
+                elif self.SEATSMAP[i][j] == " X ":  # X -> Asiento ocupado
                     print(f"{Fore.RED}[{self.SEATSMAP[i][j]}] ",end="")
+                
                 else:
-                    print(f"[{self.SEATSMAP[i][j]}] ",end="" )
+                    print(f"{Fore.GREEN}[{self.SEATSMAP[i][j]}] ",end="" ) # Printea el asiento "[A0], [A1], [A2]..."
+            
             print("\n", end="")
+
+
+    # Funcion para actualizar un asiento y que ahora esté ocupado
     def UpdateReserved(self, seat):
         for i in range(len(self.SEATSMAP)):
             for j in range(len(self.SEATSMAP[i])):
                 if self.SEATSMAP[i][j] == seat:
                     self.SEATSMAP[i][j] = " X "
-                    
+                else:
+                    continue
+
+    def UpdateCanceled(self, seat, seatPos):
+        for i in range(len(self.SEATSMAP)):
+            for j in range(len(self.SEATSMAP[i])):
+                if (i, j) == seatPos:
+                    self.SEATSMAP[i][j] = seat
+                else:
+                    continue
+
+    def CalculateSeat(self, seat):   #Funcion para retornar la posicion del asiento
+        for i in range(len(self.SEATSMAP)):
+            for j in range(len(self.SEATSMAP[i])):
+                if self.SEATSMAP[i][j] == seat:
+                    return (i, j)
+                else:
+                    continue
+
+    def CheckSeat(self, seat): # Funcion para verificar si el asiento es valido
+        for i in range(len(self.SEATSMAP)):
+            for j in range(len(self.SEATSMAP[i])):
+                if self.SEATSMAP[i][j] == seat and self.SEATSMAP[i][j] != " X ":
+                    return True
+                else:
+                    continue
+        return False
+
+
 class Flight:
     def __init__(self, ASIGNED, ORIGIN, DEST, DATE):
         self.name = GenerateID(ORIGIN, DEST)
@@ -94,31 +134,59 @@ class Flight:
         self.date = DATE
         self.reservationList = []
 
+    def showPassengers(self):
+        print("--------------------------------")
+        print("           Pasajeros            ")
+        print("--------------------------------")
+        for i in range(len(self.reservationList)):
+            DATA = self.reservationList[i]
+            print(DATA.passenger.name)
+
+class Reservation:
+    def __init__(self, seat, passengerClass, flightClass):
+        self.seat = seat
+        self.passenger = passengerClass
+        self.flight = flightClass
+        self.state = "Reservado"
+        self.seat_POS = flightClass.CalculateSeat(seat)        
+
 class Passenger:
     def __init__(self, NAME, LASTNAME, PASSPORT):
         self.name = f"{NAME} {LASTNAME}"
         self.passportNumber = PASSPORT
         self.reservationsList = []
-    
-    def addReservation(self, RES):
-        self.reservationsList.append(RES)
-        seat = RES.number
-        RES.flight.assigned.UpdateReserved(seat)
 
+    def addReservation(self, RESERVATION):
+        RESERVATION.flight.UpdateReserved(RESERVATION.seat)
+        self.reservationsList.append(RESERVATION)# Añadimos la reservacion a la lista
+
+    def delReservation(self, RESERVATION):
+        RESERVATION.flight.UpdateReserved(RESERVATION.seat, RESERVATION.seat_POS)
+        self.reservationsList.remove(RESERVATION)# Añadimos la reservacion a la lista
+
+    def PassengerInfo(self):
+        print("---------------------------------------------")
+        print("           Informacion del Pasajero          ")
+        print("---------------------------------------------")
+        print("Nombre:          " + self.name)
+        print("Pasaporte:       " + self.passportNumber)
+        self.ShowAllReservation()
+        
+        
     def ShowAllReservation(self):
         print("---------------------------------------------")
         print("                Reservaciones                ")
         print("---------------------------------------------")
         for i in self.reservationsList:
             # Informacion del vuelo 
-            temp = i.flight
             state = i.state
-            name = temp.name
-            origin = temp.origin
-            destination = temp.destination
-            date = temp.date
+            flight = i.flight
+            name = flight.name
+            origin = flight.origin
+            destination = flight.destination
+            date = flight.date
             # Informacion del avion 
-            flight = temp.assigned
+            flight = flight.assigned
             flight_name = flight.MODEL
             print("ID:              " + name)
             print("Avion:           " + flight_name)
@@ -129,24 +197,8 @@ class Passenger:
             
             print("---------------------------------------------")
 
-    def PassengerInfo(self):
-        print("---------------------------------------------")
-        print("           Informacion del Pasajero          ")
-        print("---------------------------------------------")
-        print("Nombre:          " + self.name)
-        print("Pasaporte:       " + self.passportNumber)
-        self.ShowAllReservation()
 
 
-class Reservation:
-    def __init__(self, seat, passengerClass, flightClass):
-        self.number = seat
-        self.passenger = passengerClass
-        self.flight = flightClass
-        self.state = "Reservado"
-
-    def CancelReservation(self):
-        self.state = "Cancelado"
 
 
 
@@ -171,6 +223,8 @@ def GenerateID(param1=None, param2=None):
         for i in range(4):
             temp += str(random.randint(0, 9)) 
         return f"{param1[:2]}{param2[:2]}{temp}"
+#           Chulchul Villarrica - ChVi1234
+
 
 def ClasifMonth(mes):
     meses = {
@@ -270,7 +324,7 @@ def CrearVuelo():
     ListaVuelos.append(globals()[Vuelo])
 
 
-def CrearPassenger():
+def CrearPasajero(RUT):
     print("")
     print("Ingresa tu primer nombre: ")
     name = input(">")
@@ -290,55 +344,79 @@ def CrearPassenger():
         print(Fore.LIGHTRED_EX + "Ingresa tu Apellido Paterno")
         Lastname = input(">")
         Lastname = Lastname.replace(" ", "")
-        
-    print("")
-    print("Ingresa tu Rut/Pasaporte (Sin puntos, sin guión, ni el digito verificador): ")
-    doc = input(">")
-    doc = doc.replace(" ", "")   
-    
     Temp = GenerateID(name, Lastname)
-    globals()[Temp] = Passenger(name, Lastname, doc)
+    
+    globals()[Temp] = Passenger(name, Lastname, RUT)
+    
+    ListaPasajeros.append(globals()[Temp])
+    
+    SelVuelos(globals()[Temp])
 
-# def ReservarVuelo():
-#     print("")
-#     print("Ingresa tu Rut/Pasaporte (Sin puntos, sin guión, ni el digito verificador): ")
-#     doc = input(">")
-#     doc = doc.replace(" ", "")
-#     for i in range(len(ListaPasajeros)):
-#         if ListaPasajeros[i].passportNumber == doc:
-            
-            
-# def CancelarReservacion():
-#     print("vuelo cancelado xd")
+
+
+def ReservarVuelo():
+    print("")
+    print("Ingresa tu Rut/Pasaporte (Sin puntos, sin guión, ni el dígito verificador): ")
+
+    RUT = input(">")
+    RUT = RUT.replace(" ", "")
+
+    pasajero_encontrado = False
+
+    for pasajero in ListaPasajeros:
+        if pasajero.passportNumber == RUT:
+            SelVuelos(pasajero)
+            pasajero_encontrado = True
+            break
+
+    if not pasajero_encontrado:
+        CrearPasajero(RUT)
+
+    
+        
+def CancelarReservacion():
+    print("vuelo cancelado xd")
     
 
-def GenerateVuelo():
+def CrearVuelosAleatorios():
     maxVuelos = 10
-    OrigenList = ["Santiago","Valparaíso","Concepción","Antofagasta",
-              "Puerto Montt","La Serena","Iquique","Arica",
-              "Punta Arenas","Calama","Temuco","Rancagua",
-              "Viña del Mar","Valdivia","Copiapó"]
+    
+    OrigenList = [  "Santiago","Valparaíso","Concepción","Antofagasta",
+                    "Puerto Montt","La Serena","Iquique","Arica",
+                    "Punta Arenas","Calama","Temuco","Rancagua",
+                    "Viña del Mar","Valdivia","Copiapó"
+                ]
 
-    DestinoList = ["Valparaíso","Arica","Puerto Montt","La Serena",
-               "Calama","Concepción","Iquique",
-               "Punta Arenas","Viña del Mar", "Villarrica", "La casa del Profe Elliott", "Campus Norte"]
+    DestinoList = [ "Valparaíso","Arica","Puerto Montt","La Serena",
+                    "Concepción","Iquique","Punta Arenas","Viña del Mar",
+                    "Villarrica", "La casa del Profe Elliott", "Campus Norte"]
 
     for i in range(maxVuelos):
         Avion  = random.choice(ListaAviones)
-        Origen = random.choice(OrigenList)
-        Destino = random.choice(DestinoList)
+        while True:
+            Origen = random.choice(OrigenList)
+            Destino = random.choice(DestinoList)
+            if Origen == Destino:
+                continue
+            else:
+                break
         Fecha = GenerateDate()
         Fecha = f"{Fecha[0]} {Fecha[1]}, {Fecha[2]}:{Fecha[3]}"
         Vuelo = GenerateID(Origen, Destino)
+        
         globals()[Vuelo] = Flight(Avion, Origen, Destino, Fecha)
+        
         ListaVuelos.append(globals()[Vuelo])
 
-def GenerateAvion():
+def CrearAvionesAleatorios():
     maxAviones = 10
     for i in range(maxAviones):
-        Variable = f"Avion_{i+1}"
-        globals()[Variable] = Airplane()
-        ListaAviones.append(globals()[Variable])
+        
+        Avion = f"Avion_{i+1}"
+
+        globals()[Avion] = Airplane()
+
+        ListaAviones.append(globals()[Avion])
 
 def VerVuelos():
     switch = True
@@ -352,20 +430,69 @@ def VerVuelos():
         destination = temp.destination
         date = temp.date
         if switch:
-            print(Fore.LIGHTBLACK_EX + f"{origin} a {destination}, {date}")
+            print(Fore.LIGHTBLACK_EX + f"{name} - {origin} a {destination}, {date}")
             switch = False
         else:
-            print(Fore.LIGHTCYAN_EX + f"{origin} a {destination}, {date}")
+            print(Fore.LIGHTCYAN_EX + f"{name} - {origin} a {destination}, {date}")
             switch = True
     print("----------------------------------------")
 
+def SelVuelos(PASSENGER):
+    while True:
+        VerVuelos()
+        print("Seleccione uno de los siguientes vuelos (Introduzca la ID):")
+        choice = input("> ")
 
+        flight_found = False
+
+        for flight in ListaVuelos:
+            if flight.name == choice:
+                flight.assigned.GetAirplaneMap()
+                
+                while True:
+                    print("Seleccione un asiento")
+                    seat_choice = input("> ")
+
+                    if flight.assigned.CheckSeat(seat_choice):
+                        Reservation = GenerateID()
+                        
+                        reservation = Reservation(seat_choice, PASSENGER, flight)
+                        
+                        PASSENGER.addReservation(reservation)
+                        
+                        flight_found = True
+                        break
+                    else:
+                        print(Fore.RED + "Seleccione un asiento válido")
+                break
+        
+        if flight_found:
+            break
+        else:
+            print(Fore.RED + "Seleccione un vuelo válido (Introduzca la ID):")
+
+
+
+
+def VerReservaciones():
+    for i in range(len(ListaPasajeros)):
+        ListaPasajeros[i].PassengerInfo
+
+def VerPasajeros():
+    VerVuelos()
+    print("Seleccione uno de los siguientes vuelos (Introduzca la ID):")
+    choice = input("> ")
+    for j in range(len(ListaVuelos)):
+        temp = ListaVuelos[j]
+        if temp.name == choice:
+            ListaVuelos[j].showPassengers()
+            ListaVuelos[j].assigned.GetAirplaneMap
 
 def main():
     # Generamos una serie de aviones
-    GenerateAvion()
+    CrearAvionesAleatorios()
     # Creacion de Vuelos con destinos aleatorios y les asignamos aviones aleatorios
-    GenerateVuelo()
+    CrearVuelosAleatorios()
     # Funcion para ver todos los vuelos disponibles
     Bucle = True
     while Bucle:
@@ -373,8 +500,8 @@ def main():
         print("1. Crear un vuelo")
         print("2. Reservar un vuelo")
         print("3. Cancelar reservación")
-        print("4. Opcion 4")
-        print("5. Opcion 5")
+        print("4. Ver reservaciones")
+        print("5. Ver pasajeros de vuelo")
         print("6. Ver todos los vuelos")
         print("7. Salir")
         try:    
@@ -386,16 +513,16 @@ def main():
             elif choice == 3:
                 CancelarReservacion()
             elif choice == 4:
-                print("opcion4")
+                VerReservaciones()
             elif choice == 5:
-                print("opcion5")
+                VerPasajeros()
             elif choice == 6:
                 VerVuelos()
             elif choice == 7:
                 Bucle = False
         except Exception as r:
             print("Por favor ingrese una opcion valida :)")
-            # print(r)
+            print(r)
 
 ListaVuelos = []
 ListaAviones = []
