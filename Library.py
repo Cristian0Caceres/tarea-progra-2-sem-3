@@ -210,8 +210,15 @@ def main():
             CATALOG.ShowAvailableCatalog()
 
         
-        elif userOptions == 7
-            
+        elif userOptions == 7:
+            ShowUser()
+            UserId = int(input("ID: "))
+            userMemorySpace = GetUserMemory(UserId)
+            print(userMemorySpace)
+            aux = userMemorySpace
+            globals()[aux].userborrowedBooks
+
+
         elif userOptions== 8:
             ShowUser()
         elif userOptions == 9:
