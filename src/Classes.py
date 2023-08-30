@@ -75,7 +75,6 @@ class Airplane:
         print("-------------------------------------")
         for i in range(len(self.SEATSMAP)): #Leemos el mapa de asientos para saber que tan largo es
             for j in range(len(self.SEATSMAP[i])): # Iteramos sobre cada array dentro del array del mapa
-            
                 if self.SEATSMAP[i][j] == "":       # Si el array está vacio entonces no printea nada, esto quiere decir que es el pasillo
                     print("  ",end="")              # Printeamos nada    
                 
@@ -86,7 +85,7 @@ class Airplane:
                     print(f"{Fore.GREEN}[{self.SEATSMAP[i][j]}] ",end="" ) # Printea el asiento "[A0], [A1], [A2]..."
             
             print("\n", end="")
-
+        
 
     # Funcion para actualizar un asiento y que ahora esté ocupado
     def UpdateReserved(self, seat):
@@ -485,12 +484,17 @@ def SelVuelos(PASSENGER):
         else:
             print(Fore.RED + "Seleccione un vuelo válido (Introduzca la ID):")
 
-
-
-
 def VerReservaciones():
     for i in range(len(ListaPasajeros)):
         ListaPasajeros[i].PassengerInfo()
+
+def VerAsientos():
+    for i in range(len(ListaVuelos)):
+        if ListaVuelos[i].assigned.GetAirplaneSeatNum() != 90:
+            print(ListaVuelos[i].assigned.GetAirplaneMap())
+        for j in range(len(ListaVuelos[i].reservationList)):
+            if ListaVuelos[i][j].showPassengers != None:
+                print(ListaVuelos[i][j].showPassengers)
 
 def VerPasajeros():
     VerVuelos()
@@ -514,10 +518,11 @@ def main():
         print("1. Crear un vuelo")
         print("2. Reservar un vuelo")
         print("3. Cancelar reservación")
-        print("4. Ver reservaciones")
-        print("5. Ver pasajeros de vuelo")
-        print("6. Ver todos los vuelos")
-        print("7. Salir")
+        print("4. Ver todas las reservaciones")
+        print("5. Ver pasajeros de un vuelo")
+        print("6. Ver todos los asientos de los aviones")
+        print("7. Listar todos los vuelos")
+        print("0. Salir")
         try:    
             choice = int(input("> "))
             if choice == 1:
@@ -531,8 +536,10 @@ def main():
             elif choice == 5:
                 VerPasajeros()
             elif choice == 6:
-                VerVuelos()
+                VerAsientos()
             elif choice == 7:
+                VerVuelos()
+            elif choice == 0:
                 Bucle = False
             elif choice == 10:
                 print(ListaVuelos)
