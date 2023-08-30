@@ -1,5 +1,9 @@
+
+
+LIST_USERS = []
+
 class Book:                                                #Clase Libro
-    def __init__(self,name,author,pages,gender):
+    def __init__(self,id,name,author,pages,gender):
         self.id = id
         self.name = name
         self.author = author
@@ -9,7 +13,6 @@ class Book:                                                #Clase Libro
 
     
 class Catalog:        
-                                                  #Clase Catologo
     def __init__(self):
         self.catalogList = []
 
@@ -55,6 +58,7 @@ class load:                                          #Clase prestamo
         self.dateInit = dateInit
         self.dateExit = dateExit
         self.borrowedBooks = []
+        
 
     def LendBook(self,catalog,user):
         
@@ -69,10 +73,26 @@ class load:                                          #Clase prestamo
         for i in self.borrowedBooks:
             print(i)
 
+
+def Clean():
+    print("\n")
+
+
+
+def ShowUser():
+    Clean()
+    for i in LIST_USERS:
+        print(i.id,i.name,i.lastname)
+
+def GetId():
+    return len(LIST_USERS)
+    
+
 def Welcome():
     print("Bienvenido")
 
 def Options():
+    Clean()
     print("1. Registrar Usuario")
     print("2. Crear Libro")
     print("3. Eliminar Libro")
@@ -80,6 +100,7 @@ def Options():
     print("5. Devolver Libro")
     print("6. Ver libros disponibles")
     print("7. Ver historial de un usuario")
+    print("8. Mostrar todos los usuarios")
     print("0. Salir")
     
 def main():
@@ -90,15 +111,17 @@ def main():
         Options()
         userOptions = int(input("> "))
         if userOptions == 1:
-            userId = input("Id: ")
+            userId = GetId()
             userName = input("Nombre: ")
             aux = userName
             userLastname = input("Apellido: ")
             userAge = int(input("Edad: "))
-            
+    
             globals()[aux] = User(userId,userName,userLastname,userAge)
             
-            globals()[aux].ShowInformation()
+            LIST_USERS.append(globals()[aux])
+            
+            ShowUser()
             
         elif userOptions == 2:
             bookName = input("Nombre del libro: ")
@@ -107,10 +130,18 @@ def main():
             bookPages = input("Paginas: ")
             bookGender = input("Genero: ")
             globals()[aux] = Book(bookName,bookAuthor,bookPages,bookGender)
-        
+            CATALOG.catalogList.append(globals()[aux])
+            
         elif userOptions == 3:
             bookName = input("Nombre del libro: ")
-            CATALOG.DeleteBook
+            CATALOG.DeleteBook(bookName)
+            
+            
+            
+        
+        elif userOptions == 6:
+            CATALOG.ShowCatalog()
+            
             
             
             
