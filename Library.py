@@ -44,7 +44,7 @@ class Catalog:
 
     def ShowNotAvailableCatalog(self):
         for book in self.catalogList:
-            if book[6] == "No Disponible":
+            if book[5] == "No Disponible":
                 print("Id " + str(book[0]) + " Titulo: "+ book[1] + " Autor: " + book[2] + " Paginas: " + str(book[3]) + " Genero: " + book[4] + " Estado " +book[5])
 
 
@@ -79,16 +79,22 @@ class Load:                                          #Clase prestamo
     def LendBook(self,catalog):
         
         for book in catalog.catalogList:
-            if book[6] == "Disponible":
+            if book[5] == "Disponible":
                 if book[0] ==  int(self.bookId):
                     ide = len(self.borrowedBooks)
-                    book[6] = "No Disponible"
+                    book[5] = "No Disponible"
                     print(catalog)
                     self.borrowedBooks.append(["Id: " + str(ide),"Nombre: " + book[1], "Autor: " + book[2],"Persona: " + self.user])
                 
-    def ReturnBook(self,catalog):
-        print("entro")
-        print(self.bookId,catalog.catalogList)
+    def ReturnBook(self,catalog,bookId):
+        for book in catalog.catalogList:
+            if book[5] == "No Disponible":
+                if book[0] ==  int(self.bookId):
+                    ide = len(self.borrowedBooks)
+                    book[5] = "Disponible"
+                    print(catalog)
+                    self.borrowedBooks.append(["Id: " + str(ide),"Nombre: " + book[1], "Autor: " + book[2],"Persona: " + self.user])
+        
         
         
 
@@ -191,17 +197,20 @@ def main():
         elif userOptions == 5:
             ShowUser()
             UserId = int(input("ID: "))
-            CATALOG.ShowNotAvailableCatalog()
             userMemorySpace = GetUserMemory(UserId)
-            print(userMemorySpace)
-            userId = input("Book Id: ")
+            CATALOG.ShowNotAvailableCatalog()
+            print(userMemorySpace.name,userMemorySpace.lastname,userMemorySpace.age)
+
+            bookId = input("Book Id: ")
+
             aux = userMemorySpace
-            globals()[aux].ReturnBook(CATALOG)
+            globals()[aux].ReturnBook(CATALOG,bookId)
 
         elif userOptions == 6:
             CATALOG.ShowAvailableCatalog()
 
-            
+        
+        elif userOptions == 7
             
         elif userOptions== 8:
             ShowUser()
