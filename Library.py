@@ -15,11 +15,11 @@ class Book:                                                #Clase Libro
 class Catalog:        
     def __init__(self):
         self.catalogList = [
-    [0, "La casa de los espíritus", "Isabel Allende", 368, "Narrativo de terror", "Chile", "Disponible"],
-    [1, "Los detectives salvajes", "Roberto Bolaño", 648, "Narrativo de terror", "Chile", "No Disponible"],
-    [2, "2666", "Roberto Bolaño", 912, "Narrativo de terror", "Chile", "Disponible"],
-    [3, "La ciudad de los prodigios", "Eduardo Mendoza", 408, "Narrativo de terror", "Chile", "Disponible"],
-    [4, "La muerte de Artemio Cruz", "Carlos Fuentes", 291, "Narrativo de terror", "Chile", "Disponible"]
+    [0, "La casa de los espíritus", "Isabel Allende", 368, "Narrativo de terror", "Disponible"],
+    [1, "Los detectives salvajes", "Roberto Bolaño", 648, "Narrativo de terror", "No Disponible"],
+    [2, "2666", "Roberto Bolaño", 912, "Narrativo de terror", "Disponible"],
+    [3, "La ciudad de los prodigios", "Eduardo Mendoza", 408, "Narrativo de terror", "Disponible"],
+    [4, "La muerte de Artemio Cruz", "Carlos Fuentes", 291, "Narrativo de terror", "Disponible"]
             ]
 
     def AddBook(self,book):
@@ -39,7 +39,7 @@ class Catalog:
 
     def ShowAvailableCatalog(self):
         for book in self.catalogList:
-            if book[6] == "Disponible":
+            if book[5] == "Disponible":
                 print("Id " + str(book[0]) + " Titulo: "+ book[1] + " Autor: " + book[2] + " Paginas: " + str(book[3]) + " Genero: " + book[4] + " Estado " +book[5])
 
     def ShowNotAvailableCatalog(self):
@@ -198,6 +198,8 @@ def main():
             aux = userMemorySpace
             globals()[aux].ReturnBook(CATALOG)
 
+        elif userOptions == 6:
+            CATALOG.ShowAvailableCatalog()
 
             
             

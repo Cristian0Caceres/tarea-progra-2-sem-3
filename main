@@ -66,11 +66,11 @@ class Airplane:
                     print(f"[{self.SEATSMAP[i][j]}] ",end="" )
             print("\n", end="")
 
-        
     def ShowAllflights(self):
-        for flight in self.flightClass:
-            print(flight) 
-            
+        for i in self.flight:
+            print(i)
+
+
     # def ModifyAirplane(self, SELECTED):
     #     occupied = " X "
     #     for i in range(len(self.SEATS)):
@@ -169,8 +169,6 @@ Avion1.UpdateFlight(Temuco_Santiago)
 Avion2.UpdateFlight(Santiago_Arica)
 Avion3.UpdateFlight(BuenosAires_Caracas)
 
-
-Avion1.ShowAllflights()
 
 # #Creando vuelos a Avion3
 # LaPaz_Cordoba = FlightNumber("Paz-4234","LaPaz","Cordoba","13:00 Mie.12 Nov.2023",Avion3,"D24")
