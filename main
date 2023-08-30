@@ -1,6 +1,338 @@
 #!/usr/bin/env python3
 
-from src.Classes import main
 
+from src.classes import *
+
+init(autoreset=True)
+
+#*  _______________________
+#* < Funciones Principales >
+#*  -----------------------
+#*         \   ^__^
+#*          \  (oo)\_______
+#*             (__)\       )\/\
+#*                 ||----w |
+#*                 ||     ||
+
+    
+def GenerateDate():
+    mes = random.randint(1, 12)
+    
+    if mes in [4, 6, 9, 11]:  # Meses con 30 días
+        dia = random.randint(1, 30)
+    elif mes == 2:  # Febrero
+        dia = random.randint(1, 28)
+    else:  # Meses con 31 días
+        dia = random.randint(1, 31)
+    
+    hora = random.randint(0, 23)
+    minutos = random.randint(0, 59)
+    
+    mes = ClasifMonth(mes)
+    
+    return mes, dia, hora, minutos
+
+def CrearVuelo():
+    print("")
+    print("Ingrese el origen:")
+    dato1 = input(">")
+
+    print("")
+    print("Ingrese el destino:")
+    dato2 = input(">")
+
+    print("")
+    print("Ingrese el mes (en número, ej: 1 para enero, 2 para febrero, etc.):")
+    dato4 = int(input(">"))
+    while dato4 < 1 or dato4 > 12:
+        print(Fore.RED + "Mes inválido. Ingrese un número entre 1 y 12:")
+        dato4 = int(input(">"))
+    dato4 = ClasifMonth(dato4)
+
+    print("")
+    print("Ingrese el día:")
+    dato3 = int(input(">"))
+
+    # Validación de días segun el mes
+    while dato3 < 1 or dato3 > 31:
+        print(Fore.RED + "Día inválido. Ingrese un número entre 1 y 31:")
+        dato3 = int(input(">"))
+
+        # Validación específica para febrero
+        if dato4 == 2 and dato3 > 29:
+            print(Fore.RED + "Febrero tiene máximo 29 días. Ingrese un día válido:")
+            dato3 = int(input(">"))
+
+        if dato4 in [4, 6, 9, 11] and dato3 > 30:
+            print(Fore.RED + "Este mes tiene máximo 30 días. Ingrese un día válido:")
+            dato3 = int(input(">"))
+    
+    hora_valida = False
+    print("")
+    print("Ingrese una hora en formato hh:mm (de 00:00 a 23:59):")
+    while not hora_valida:
+        dato5 = input(">")
+        try:
+            hora, minutos = map(int, dato5.split(":"))
+            if 0 <= hora <= 23 and 0 <= minutos <= 59:
+                hora_valida = True
+            else:
+                print(Fore.RED + "Hora inválida. Ingrese una hora válida.")
+        except ValueError:
+            print(Fore.RED + "Formato incorrecto. Ingrese la hora en el formato hh:mm.")
+    print("")
+    print("Seleccione un avión:")
+    for i in range(len(ListaAviones)):
+        print(f"{i+1}. {ListaAviones[i].MODEL}") #Listamos los aviones para elegir uno para el vuelo
+    i = int(input(">"))
+    
+    
+    print("")
+    print(Fore.GREEN + f"Vuelo creado exitosamente: \nAvion:{ListaAviones[i-1].MODEL}  \nOrigen: {dato1} \nDestino: {dato2} \nFecha: {dato4} del {dato3} \nHora: {dato5}")
+
+    Vuelo = GenerateID(dato1, dato2)
+    globals()[Vuelo] = Flight(ListaAviones[i-1], dato1, dato2, f"{dato4} {dato3}, {dato5}")
+    ListaVuelos.append(globals()[Vuelo])
+
+
+def CrearPasajero(RUT):
+    print("")
+    print("Ingresa tu primer nombre: ")
+    name = input(">")
+    name = name.replace(" ", "")
+    
+    while name == "":
+        print(Fore.LIGHTRED_EX + "Ingresa tu primer nombre: ")
+        name = input(">")
+        name = name.replace(" ", "")
+    
+    print("")
+    print("Ingresa tu Apellido Paterno: ")
+    Lastname = input(">")
+    Lastname = Lastname.replace(" ", "")
+    
+    while Lastname == "":
+        print(Fore.LIGHTRED_EX + "Ingresa tu Apellido Paterno")
+        Lastname = input(">")
+        Lastname = Lastname.replace(" ", "")
+
+    Temp = GenerateID(name, Lastname)
+    
+    globals()[Temp] = Passenger(name, Lastname, RUT)
+    
+    ListaPasajeros.append(globals()[Temp])
+    SelVuelos(globals()[Temp])
+
+
+def ReservarVuelo():
+    print("")
+    print("Ingresa tu Rut/Pasaporte (Sin puntos, sin guión, ni el dígito verificador): ")
+
+    RUT = input(">")
+    RUT = RUT.replace(" ", "")
+
+    pasajero_encontrado = False
+
+    for pasajero in ListaPasajeros:
+        if pasajero.passportNumber == RUT:
+            SelVuelos(pasajero)
+            pasajero_encontrado = True
+            break
+
+    if not pasajero_encontrado:
+        CrearPasajero(RUT)
+
+def CancelarReservacion():
+    print("")
+    print("Ingresa tu Rut/Pasaporte (Sin puntos, sin guión, ni el dígito verificador): ")
+
+    RUT = input(">")
+    RUT = RUT.replace(" ", "")
+
+    pasajero_encontrado = False
+
+    for pasajero in ListaPasajeros:
+        if pasajero.passportNumber == RUT:
+            pasajero.PassengerInfo()
+            print("")
+            print("Seleccione el ID del vuelo:  ")
+            choice = input("> ")
+            
+            for reservation in pasajero.reservationsList:
+                if reservation.flight.name == choice:
+                    pasajero.delReservation(reservation)
+            pasajero_encontrado = True
+            break
+    if not pasajero_encontrado:
+        print("No existes en la base de datos")
+
+
+def CrearVuelosAleatorios():
+    maxVuelos = 10
+    
+    OrigenList = [  "Santiago","Valparaíso","Concepción","Antofagasta",
+                    "Puerto Montt","La Serena","Iquique","Arica",
+                    "Punta Arenas","Calama","Temuco","Rancagua",
+                    "Viña del Mar","Valdivia","Copiapó"
+                ]
+
+    DestinoList = [ "Valparaíso","Arica","Puerto Montt","La Serena",
+                    "Concepción","Iquique","Punta Arenas","Viña del Mar",
+                    "Villarrica", "La casa del Profe Elliott", "Campus Norte"]
+
+    for i in range(maxVuelos):
+        Avion  = random.choice(ListaAviones)
+        while True:
+            Origen = random.choice(OrigenList)
+            Destino = random.choice(DestinoList)
+            if Origen == Destino:
+                continue
+            else:
+                break
+        Fecha = GenerateDate()
+        Fecha = f"{Fecha[0]} {Fecha[1]}, {Fecha[2]}:{Fecha[3]}"
+        Vuelo = GenerateID(Origen, Destino)
+        
+        globals()[Vuelo] = Flight(Avion, Origen, Destino, Fecha)
+        
+        ListaVuelos.append(globals()[Vuelo])
+
+def CrearAvionesAleatorios():
+    maxAviones = 10
+    for i in range(maxAviones):
+        
+        Avion = f"Avion_{i+1}"
+
+        globals()[Avion] = Airplane()
+
+        ListaAviones.append(globals()[Avion])
+
+def VerVuelos():
+    switch = True
+    print("----------------------------------------------------------------")
+    print("                         Vuelos Disponibles                     ")
+    print("----------------------------------------------------------------")
+    for i in range(len(ListaVuelos)):
+        temp = ListaVuelos[i]
+        name = temp.name
+        origin = temp.origin
+        destination = temp.destination
+        date = temp.date
+        if switch:
+            print(Fore.LIGHTBLACK_EX + f"{name} - {origin} a {destination}, {date}")
+            switch = False
+        else:
+            print(Fore.LIGHTCYAN_EX + f"{name} - {origin} a {destination}, {date}")
+            switch = True
+    print("----------------------------------------------------------------")
+
+def SelVuelos(PASSENGER):
+    alreadyReserved = False
+    while True:
+        VerVuelos()
+        print("Seleccione uno de los siguientes vuelos (Introduzca la ID):")
+        choice = input("> ")
+
+        flight_found = False
+
+        for vuelo in ListaVuelos:
+            for reservacion in vuelo.reservationList:
+                if PASSENGER.passportNumber == reservacion.passenger.passportNumber and reservacion.flight.name == choice:
+                    alreadyReserved = True
+
+        if not alreadyReserved:
+            for flight in ListaVuelos:
+                if flight.name == choice:
+                    flight.assigned.GetAirplaneMap()
+            
+                    while True:
+                        print("Seleccione un asiento")
+                        seat_choice = input("> ")
+                        if flight.assigned.CheckSeat(seat_choice):
+                            reserv = GenerateID(flight.origin, flight.destination)
+                            
+                            globals()[reserv] = Reservation(seat_choice, PASSENGER, flight)
+
+                            PASSENGER.addReservation(globals()[reserv])
+                            
+                            flight_found = True
+                            break
+                        else:
+                            print(Fore.RED + "Seleccione un asiento válido")
+                    break
+        if flight_found:
+            break
+        
+        elif alreadyReserved:
+            print(Fore.RED + "Ya has reservado un asiento en este vuelo")
+            break
+            
+        else:
+            print(Fore.RED + "Seleccione un vuelo válido (Introduzca la ID):")
+
+def VerReservaciones():
+    for i in range(len(ListaPasajeros)):
+        ListaPasajeros[i].PassengerInfo()
+
+def VerAsientos():
+    for i in range(len(ListaVuelos)):
+        if ListaVuelos[i].assigned.GetAirplaneSeatNum() != 90:
+            print(ListaVuelos[i].assigned.GetAirplaneMap())
+            print(ListaVuelos[i].showPassengers())
+
+def VerPasajeros():
+    VerVuelos()
+    print("Seleccione uno de los siguientes vuelos (Introduzca la ID):")
+    choice = input("> ")
+    for j in range(len(ListaVuelos)):
+        temp = ListaVuelos[j]
+        if temp.name == choice:
+            ListaVuelos[j].assigned.GetAirplaneMap()
+            ListaVuelos[j].showPassengers()
+
+def main():
+    # Generamos una serie de aviones
+    CrearAvionesAleatorios()
+    # Creacion de Vuelos con destinos aleatorios y les asignamos aviones aleatorios
+    CrearVuelosAleatorios()
+    # Funcion para ver todos los vuelos disponibles
+    Bucle = True
+    while Bucle:
+        print("Seleccione una opcion para realizar: ")
+        print("1. Crear un vuelo")
+        print("2. Reservar un vuelo")
+        print("3. Cancelar reservación")
+        print("4. Listar todos los pasajeros y sus reservaciones")
+        print("5. Ver pasajeros de solo un vuelo")
+        print("6. Ver todos los asientos de los aviones")
+        print("7. Listar todos los vuelos disponibles")
+        print("0. Salir")
+        try:    
+            choice = int(input("> "))
+            if choice == 1:
+                CrearVuelo()
+            elif choice == 2:
+                ReservarVuelo()
+            elif choice == 3:
+                CancelarReservacion()
+            elif choice == 4:
+                VerReservaciones()
+            elif choice == 5:
+                VerPasajeros()
+            elif choice == 6:
+                VerAsientos()
+            elif choice == 7:
+                VerVuelos()
+            elif choice == 0:
+                Bucle = False
+            elif choice == 10:
+                print(ListaVuelos)
+        except Exception as r:
+            print("Por favor ingrese una opcion valida :)")
+            print(r)
+
+ListaVuelos = []
+ListaAviones = []
+ListaPasajeros = []
 if __name__ == "__main__":
     main()
