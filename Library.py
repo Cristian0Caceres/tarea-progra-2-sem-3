@@ -39,11 +39,16 @@ class Catalog:
 
     def ShowAvailableCatalog(self):
         for book in self.catalogList:
-
             if book[6] == "Disponible":
                 print("Id " + str(book[0]) + " Titulo: "+ book[1] + " Autor: " + book[2] + " Paginas: " + str(book[3]) + " Genero: " + book[4] + " Estado " +book[5])
 
+    def ShowNotAvailableCatalog(self):
+        for book in self.catalogList:
+            if book[6] == "No Disponible":
+                print("Id " + str(book[0]) + " Titulo: "+ book[1] + " Autor: " + book[2] + " Paginas: " + str(book[3]) + " Genero: " + book[4] + " Estado " +book[5])
 
+
+        
 class User:                                             #Clase Usuario
     def __init__(self,id,name,lastname,age):
         self.id = id
@@ -63,8 +68,8 @@ class User:                                             #Clase Usuario
         print("Libros Prestados ", self.userborrowedBooks)
         
 class Load:                                          #Clase prestamo
-    def __init__(self,book,user,dateInit,dateExit):
-        self.book = book
+    def __init__(self,bookId,user,dateInit,dateExit):
+        self.bookId = bookId
         self.user = user
         self.dateInit = dateInit
         self.dateExit = dateExit
@@ -72,14 +77,24 @@ class Load:                                          #Clase prestamo
         
 
     def LendBook(self,catalog):
-        print(self)
         
         for book in catalog.catalogList:
-            if book.name == self.book and book.state == "Disponible":
-                register = "Libro: {0}, Persona: {1} {2}, Fecha de inicio: {3}, Fecha de termino: {4}".format(self.book,self.user[1],self.user[2],self.dateInit,self.dateExit)
-                self.borrowedBooks.append(register)
-
+            if book[6] == "Disponible":
+                if book[0] ==  int(self.bookId):
+                    ide = len(self.borrowedBooks)
+                    book[6] = "No Disponible"
+                    print(catalog)
+                    self.borrowedBooks.append(["Id: " + str(ide),"Nombre: " + book[1], "Autor: " + book[2],"Persona: " + self.user])
                 
+    def ReturnBook(self,catalog):
+        print("entro")
+        print(self.bookId,catalog.catalogList)
+        
+        
+
+        
+
+        
 
     def ShowLendBook(self):
         for i in self.borrowedBooks:
@@ -125,6 +140,7 @@ def Options():
     print("6. Ver libros disponibles")
     print("7. Ver historial de un usuario")
     print("8. Mostrar todos los usuarios")
+    print("9. Ver libros")
     print("0. Salir")
     
 def main():
@@ -161,27 +177,35 @@ def main():
         elif userOptions == 4:
             ShowUser()
             UserId = int(input("ID: "))
-            CATALOG.ShowCatalog()
+            CATALOG.ShowAvailableCatalog()
             userMemorySpace = GetUserMemory(UserId)
-            print("memoria de usuraio: ", userMemorySpace)
-            userId = input("Book Id: ")
+            BookId = input("Book Id: ")
             dateInit = input("Fecha de inicio ejemplo(18 oct 2023): ")
             dateExit = input("Fecha de regreso ejemplo(25 oct 2023)")
             aux = userMemorySpace
-            globals()[aux] = Load(userId,userMemorySpace.name,dateInit,dateExit)
+            globals()[aux] = Load(BookId,userMemorySpace.name,dateInit,dateExit)
             
             globals()[aux].LendBook(CATALOG)
+            globals()[aux].ShowLendBook()
             
+        elif userOptions == 5:
+            ShowUser()
+            UserId = int(input("ID: "))
+            CATALOG.ShowNotAvailableCatalog()
+            userMemorySpace = GetUserMemory(UserId)
+            print(userMemorySpace)
+            userId = input("Book Id: ")
+            aux = userMemorySpace
+            globals()[aux].ReturnBook(CATALOG)
+
+
             
-        elif userOptions == 6:
-            CATALOG.ShowAvailableCatalog()
             
         elif userOptions== 8:
             ShowUser()
-            
-            
-            
-            
+        elif userOptions == 9:
+            CATALOG.ShowCatalog()
+        
 
 if __name__ == '__main__':
     main()
