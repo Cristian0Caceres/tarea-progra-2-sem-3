@@ -1,11 +1,11 @@
 class Book:                                                #Clase Libro
-    def __init__(self,name,author,pages,gender,state="Disponible"):
+    def __init__(self,name,author,pages,gender):
         self.id = id
         self.name = name
         self.author = author
         self.pages = pages
         self.gender = gender
-        self.state = state
+        self.state = "Disponible"
 
     
 class Catalog:        
@@ -32,7 +32,6 @@ class Catalog:
 
 class User:                                             #Clase Usuario
     def __init__(self,id,name,lastname,age):
-
         self.id = id
         self.name = name
         self.lastname = lastname
@@ -43,7 +42,12 @@ class User:                                             #Clase Usuario
         for books in self.userborrowedBooks:
             print(books)
 
-
+    def ShowInformation(self):
+        print("Id: ", self.id)
+        print("Nombre: ", self.name, self.lastname)
+        print("Edad: ", self.age)
+        print("Libros Prestados ", self.userborrowedBooks)
+        
 class load:                                          #Clase prestamo
     def __init__(self,book,user,dateInit,dateExit):
         self.book = book
@@ -79,17 +83,41 @@ def Options():
     print("0. Salir")
     
 def main():
+    CATALOG = Catalog()
     Welcome()
+    userOptions = 1
     while userOptions != 0:
         Options()
         userOptions = int(input("> "))
         if userOptions == 1:
             userId = input("Id: ")
             userName = input("Nombre: ")
+            aux = userName
             userLastname = input("Apellido: ")
-            userAge = int(input("Edad"))
-            user = User(userId,userName,userLastname,userAge)
-            user.
+            userAge = int(input("Edad: "))
+            
+            globals()[aux] = User(userId,userName,userLastname,userAge)
+            
+            globals()[aux].ShowInformation()
+            
+        elif userOptions == 2:
+            bookName = input("Nombre del libro: ")
+            aux = bookName
+            bookAuthor = input("Autor: ")
+            bookPages = input("Paginas: ")
+            bookGender = input("Genero: ")
+            globals()[aux] = Book(bookName,bookAuthor,bookPages,bookGender)
+        
+        elif userOptions == 3:
+            bookName = input("Nombre del libro: ")
+            CATALOG.DeleteBook
+            
+            
+            
+            
+            
+            
+    
             
 
 if __name__ == '__main__':
