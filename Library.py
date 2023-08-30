@@ -11,22 +11,24 @@ class Book:                                                #Clase Libro
 class Catalog:        
                                                   #Clase Catologo
     def __init__(self):
-        self.catalog = []
+        self.catalogList = []
 
     def AddBook(self,book):
-        self.catalog.append(book)
+        self.catalogList.append(book)
 
     def DeleteBook(self,name):
         index = 0
-        for book in self.catalog:
+        for book in self.catalogList:
             if book.name == name:
-                print(book.name,name)
-                self.catalog.pop(index)
+                self.catalogList.pop(index)
                 break
 
     def ShowCatalog(self):
-        for book in self.catalog:
-            print("Titulo: {0} Autor: {1} Genero: {2} Disponibilidad: {3}".format(book.name,book.author,book.gender,book.state))
+        for book in self.catalogList:
+            if book.state == "Disponible":
+                print("Titulo: {0} Autor: {1} Genero: {2} Disponibilidad: {3}".format(book.name,book.author,book.gender,book.state))
+
+
 
 class User:                                             #Clase Usuario
     def __init__(self,id,name,lastname,age):
@@ -35,6 +37,11 @@ class User:                                             #Clase Usuario
         self.name = name
         self.lastname = lastname
         self.age = age
+        self.userBorrowebBooks = []
+    
+    def ShowBorrowedBooks(self):
+        for i in self.userBorrowebBooks:
+            print(i)
 
 class load:                                          #Clase prestamo
     def __init__(self,book,user,dateInit,dateExit):
@@ -42,11 +49,21 @@ class load:                                          #Clase prestamo
         self.user = user
         self.dateInit = dateInit
         self.dateExit = dateExit
+        self.borrowedBooks = []
 
     def LendBook(self,catalog):
-        for book in catalog.catalog:
-            
-            print(book.name)
+        
+        for book in catalog.catalogList:
+            if book.name == self.book and book.state == "Disponible":
+                register = "Libro: {0}, Persona: {1} {2}, Fecha de inicio: {3}, Fecha de termino: {4}".format(self.book,self.user[1],self.user[2],self.dateInit,self.dateExit)
+                self.borrowedBooks.append(register)
+                print(self.user)
+                self.user.userBorrowebBooks.append(register)
+
+
+    def ShowLendBook(self):
+        for i in self.borrowedBooks:
+            print(i)
 
 #creo libro
 
@@ -54,13 +71,13 @@ class load:                                          #Clase prestamo
 catalogo = Catalog()
 narnia = Book("narnia", "Kevin parra",190,"narrative")
 harry = Book("harry el sucio poter","kevin parra",1000,"horror")
-locuras_pyeter_pkaer = Book("diabetin","satan",123,"horror")
+diabetin = Book("diabetin","satan",123,"horror")
 
 catalogo.AddBook(narnia)
 catalogo.AddBook(harry)
-catalogo.AddBook(locuras_pyeter_pkaer)
+catalogo.AddBook(diabetin)
 
-catalogo.ShowCatalog()
+#catalogo.ShowCatalog()
 
 catalogo.DeleteBook("narnia")
 
@@ -69,8 +86,12 @@ catalogo.DeleteBook("narnia")
 
 Kevin = ("21.566.366-4","Kevin","Parra",19)
 
-
 #Creando Load
 
-Kevin_load = load(narnia,Kevin,"mayo 18 2023","mayo 23 2023")
+Kevin_load = load("diabetin",Kevin,"mayo 18 2023","mayo 23 2023")
 Kevin_load.LendBook(catalogo)
+
+Kevin_load.ShowLendBook()
+
+
+Kevin.ShowBorrowedBooks()
