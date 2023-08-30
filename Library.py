@@ -1,10 +1,11 @@
 class Book:                                                #Clase Libro
-    def __init__(self,name,author,pages,gender):
+    def __init__(self,name,author,pages,gender,state="Disponible"):
         self.id = id
         self.name = name
         self.author = author
         self.pages = pages
         self.gender = gender
+        self.state = state
 
     
 class Catalog:        
@@ -25,7 +26,7 @@ class Catalog:
 
     def ShowCatalog(self):
         for book in self.catalog:
-            print("Titulo: {0} Autor: {1} Genero {2}".format(book.name,book.author,book.gender))
+            print("Titulo: {0} Autor: {1} Genero: {2} Disponibilidad: {3}".format(book.name,book.author,book.gender,book.state))
 
 class User:                                             #Clase Usuario
     def __init__(self,id,name,lastname,age):
@@ -43,8 +44,10 @@ class load:                                          #Clase prestamo
         self.dateExit = dateExit
 
     def LendBook(self,catalog):
-        for i in catalog:
-            print(i)
+        for book in catalog.catalog:
+            
+            print(book.name)
+
 #creo libro
 
 
